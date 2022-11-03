@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Req,
@@ -22,26 +23,21 @@ export class UsersController {
   @Get()
   @HttpCode(200)
   findAll(@Req() req: Request): User[] {
-    console.log('req: ', req.path);
     return this.userService.findAll();
   }
 
   @Post()
   create(@Body() body: CreateUser): User {
-    console.log('body: ', body);
     return this.userService.create(body);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: User): User {
-    console.log('PUT id: ', id);
-    console.log('body: ', body);
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: User): User {
     return this.userService.update(id, body);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): string {
-    console.log('DELETE id: ', id);
+  delete(@Param('id', ParseIntPipe) id: number): string {
     this.userService.delete(id);
     return 'Success Delete';
   }
