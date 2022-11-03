@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -11,31 +12,37 @@ import {
 import { Request } from 'express';
 
 // Relatives
-import { CreateUser, CreateUserDto } from './user.types';
+import { CreateUser, User } from './dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private userService: UsersService) {}
+
   @Get()
   @HttpCode(200)
-  findAll(@Req() req: Request): string {
+  findAll(@Req() req: Request): User[] {
     console.log('req: ', req.path);
-    return 'This action returns all Users';
+    return this.userService.findAll();
   }
 
   @Post()
-  create(@Body() body: CreateUser): CreateUserDto {
+  create(@Body() body: CreateUser): User {
     console.log('body: ', body);
-    return { id: 'Adam123', name: 'Adam', age: 19, sex: 'm' };
+    return this.userService.create(body);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() body: CreateUserDto): CreateUserDto {
-    console.log('id: ', id);
+  update(@Param('id') id: string, @Body() body: User): User {
+    console.log('PUT id: ', id);
     console.log('body: ', body);
-    const newAge = 25;
-    return {
-      ...body,
-      age: newAge,
-    };
+    return this.userService.update(id, body);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string): string {
+    console.log('DELETE id: ', id);
+    this.userService.delete(id);
+    return 'Success Delete';
   }
 }

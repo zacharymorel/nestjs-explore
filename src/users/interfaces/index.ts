@@ -1,11 +1,11 @@
-export class CreateUserDto {
+export interface CreatedUserDto {
   id: string;
   name: string;
   age: number | null;
   sex: string | null;
 }
 
-export class CreateUser {
+export interface CreateUserDto {
   name: string;
   age: number | null;
   sex: string | null;
